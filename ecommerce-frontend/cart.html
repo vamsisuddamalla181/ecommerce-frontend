@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      margin-top: 120px;
+      background: linear-gradient(135deg, #f8f9fa, #eef3f9);
+      color: #333;
+    }
+
+   
+    header nav a:hover {
+      color: #ffe082;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    main h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      font-weight: 700;
+      color: #1a237e;
+    }
+    inpot{
+      border-radius: 10px;
+    }
+
+    .main_cart_div {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    #cartContainer {
+      background: #fff;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      min-height: 180px;
+      width: 37vw;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin-right: 15px;
+      border-radius: 6px;
+    }
+
+    .cart-item-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-item-details h4 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .cart-item-details p {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .cart-item-price {
+      font-size: 18px;
+      font-weight: bold;
+      color: #388e3c;
+      min-width: 80px;
+      text-align: right;
+      margin-right: 36px;
+    }
+
+    .btn-primary {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s ease;
+      background: linear-gradient(90deg, #ff6f00, #f4511e);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(90deg, #f4511e, #d84315);
+      transform: translateY(-1px);
+    }
+
+    button#cancelCheckout {
+      background: #fd1a1a;
+      border: 0px solid;
+      border-radius: 10px;
+      padding-inline: 20px;
+      color: #fdfdfd;
+      font-size: 15px;
+      font-weight: 600;
+      transition: trasform 0.5s ease;
+    }
+
+    button#cancelCheckout:hover {
+      background: #c92c2c;
+      transform: translateY(-1px);
+
+
+    }
+
+    #checkoutSection {
+      text-align: right;
+      margin-top: 20px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+    }
+
+    #shippingForm input {
+      width: 100%;
+      padding: 8px;
+      margin: 6px 0;
+      box-sizing: border-box;
+    }
+
+    .btn-danger {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #e53935;
+      color: #fff;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-danger:hover {
+      background: #d32f2f;
+      transform: translateY(-1px);
+    }
+    footer{
+      bottom: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>My Store</h1>
+    <nav>
+      <a id="nav-home" href="index.html">Home</a>
+      <a id="nav-cart" href="cart.html"></a>
+      <a id="nav-login" href="login.html">Login/Signup</a>
+      <a id="nav-logout" href="logout.html">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="main_cart_div">
+      <h2>Your Shopping Cart</h2>
+      <div id="cartContainer">Loading...</div>
+      <div id="checkoutSection">
+        <button id="openCheckout" class="btn-primary">Proceed to Order</button>
+      </div>
+
+      <div id="shippingModal" class="modal">
+        <div class="modal-content">
+          <h3>Shipping Address</h3>
+          <form id="shippingForm">
+            <input name="street" placeholder="Street" required />
+            <input name="city" placeholder="City" required />
+            <input name="state" placeholder="State" required />
+            <input name="postalCode" placeholder="Postal Code" required />
+            <input name="country" placeholder="Country" required />
+            <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:10px;">
+              <button type="button" id="cancelCheckout">Cancel</button>
+              <button type="submit" class="btn-primary">Place Order</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+
+  <script src="js/auth-ui.js"></script>
+  <script src="js/cart.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Orders</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #333;
+      color: #fff;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header nav a {
+      color: #fff;
+      margin-left: 15px;
+      text-decoration: none;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .order-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      background: #fafafa;
+    }
+
+    .order-card strong {
+      color: #333;
+    }
+
+    .step {
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: #eee;
+      margin-right: 6px;
+      font-size: 13px;
+    }
+
+    .step.completed {
+      background: #4caf50;
+      color: #fff;
+    }
+
+    .cart-actions {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      background: #ff6f00;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #e65100;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>My Store</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="cart.html">Cart</a>
+      <a href="login.html" id="nav-login">Login/Signup</a>
+      <a href="#" id="nav-logout">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Your Orders</h2>
+    <div class="cart-actions">
+      <button id="placeOrderBtn">Proceed to Order</button>
+    </div>
+    <ul id="orders-list"></ul>
+  </main>
+
+  <script>
+    const API_BASE = "http://localhost:5001";
+    const ordersList = document.getElementById("orders-list");
+    const placeOrderBtn = document.getElementById("placeOrderBtn");
+
+    // Step UI generator
+    function getStatusSteps(currentStatus) {
+      const steps = ["Pending", "Processing", "Shipped", "Out for Delivery", "Delivered"];
+      return steps
+        .map(step => {
+          const isCompleted = steps.indexOf(step) <= steps.indexOf(currentStatus);
+          return `<span class="step ${isCompleted ? "completed" : ""}">${step}</span>`;
+        })
+        .join(" → ");
+    }
+
+    // Load Orders
+    async function loadOrders() {
+      ordersList.innerHTML = "Loading...";
+      try {
+        const res = await fetch(`${API_BASE}/api/orders`, { credentials: "include" });
+        if (!res.ok) {
+          ordersList.innerHTML = "Failed to load orders.";
+          return;
+        }
+        const orders = await res.json();
+        if (!orders.length) {
+          ordersList.innerHTML = "<li>No orders found</li>";
+          return;
+        }
+
+        ordersList.innerHTML = "";
+        orders.forEach(order => {
+          const li = document.createElement("li");
+          li.classList.add("order-card");
+          li.innerHTML = `
+            <div><strong>Order ID:</strong> ${order._id}</div>
+            <div><strong>Status:</strong> ${getStatusSteps(order.orderStatus)}</div>
+            <div><strong>Total:</strong> ₹${order.totalAmount}</div>
+            <div><strong>Shipping:</strong> 
+              ${order.shippingAddress?.street || ""}, 
+              ${order.shippingAddress?.city || ""}, 
+              ${order.shippingAddress?.postalCode || ""}, 
+              ${order.shippingAddress?.country || ""}
+            </div>
+            <div><strong>Items:</strong></div>
+            <ul>
+              ${(order.products || []).map(i => `
+                <li>${i.productId?.name || "Product"} x ${i.quantity} @ ₹${i.price}</li>
+              `).join("")}
+            </ul>
+          `;
+          ordersList.appendChild(li);
+        });
+      } catch (err) {
+        console.error(err);
+        ordersList.innerHTML = "Error loading orders.";
+      }
+    }
+
+    // Place order (simulate cart checkout with dummy shipping)
+    if (placeOrderBtn) {
+      placeOrderBtn.addEventListener("click", async () => {
+        const shippingAddress = {
+          street: "123 Main St",
+          city: "Hyderabad",
+          state: "TG",
+          postalCode: "500001",
+          country: "India",
+        };
+
+        try {
+          const res = await fetch(`${API_BASE}/api/orders`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ shippingAddress }),
+          });
+          if (!res.ok) {
+            const err = await res.json();
+            alert("Failed to place order: " + err.message);
+            return;
+          }
+          alert("Order placed successfully!");
+          loadOrders();
+        } catch (err) {
+          console.error(err);
+          alert("Something went wrong while placing order");
+        }
+      });
+      function displayOrder(order) {
+        const li = document.createElement("li");
+        li.classList.add("order-card");
+        li.innerHTML = `
+    <div><strong>Order ID:</strong> ${order._id}</div>
+    <div><strong>Status:</strong> ${getStatusSteps(order.orderStatus)}</div>
+    <div><strong>Total:</strong> ₹${order.totalAmount}</div>
+    <div><strong>Shipping:</strong>
+      ${order.shippingAddress?.street || ""}, 
+      ${order.shippingAddress?.city || ""}, 
+      ${order.shippingAddress?.postalCode || ""}, 
+      ${order.shippingAddress?.country || ""}
+    </div>
+    <div><strong>Items:</strong></div>
+    <ul>
+      ${(order.products || []).map(i => `
+        <li>${i.productId?.name || "Product"} x ${i.quantity} @ ₹${i.price}</li>
+      `).join("")}
+    </ul>
+  `;
+        ordersList.prepend(li);
+      }
+
+    }
+
+    document.addEventListener("DOMContentLoaded", loadOrders);
+  </script>
+</body>
+
+</html>

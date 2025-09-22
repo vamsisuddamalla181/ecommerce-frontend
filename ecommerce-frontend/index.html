@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My E-commerce Store</title>
+  <link rel="stylesheet" href="./css/style_prod.css">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+  <header>
+    <h1>My Store</h1>
+    <nav>
+      <a id="nav-home" href="index.html">Home</a>
+      <a id="nav-cart" href="cart.html">Cart</a>
+      <a id="nav-login" href="login.html">Login/Signup</a>
+      <a id="nav-logout" href="#">Logout</a>
+    </nav>
+  </header>
+
+  <main style="background: none;">
+    <div style="margin-right: 60px;">
+      <div class="filter-bar">
+        <div class="filter-left">
+          <label class="categories-label" for="category-filter">Categories</label>
+          <select id="category-filter">
+            <option value="all">All</option>
+            <option value="Electronics">Electronics</option>
+            <option value="fashion">Fashion</option>
+            <option value="home">Home</option>
+            <option value="books">Books</option>
+            <option value="toys">Toys</option>
+          </select>
+        </div>
+        <div class="filter-right">
+          <h2>Products</h2>
+          <input type="text" id="search-bar" placeholder="🔍 Search products...">
+        </div>
+      </div>
+
+      <div id="productsContainer" class="products-grid"></div>
+    </div>
+  </main>
+  <footer class="footer-div">
+    <p>&copy; 2025 My E-commerce Store | All Rights Reserved</p>
+  </footer>
+  <!-- Scroll to top button -->
+  <button id="scrollTopBtn" title="Go to top">↑</button>
+  <script src="./js/footer.js"></script>
+
+  <script src="js/auth-ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
