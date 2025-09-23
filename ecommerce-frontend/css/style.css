@@ -8,7 +8,6 @@ html, body {
 header {
   background: #333;
   color: #fff;
-  padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;

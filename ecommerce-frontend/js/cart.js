@@ -249,14 +249,15 @@ async function loadCart() {
       const div = document.createElement("div");
       div.className = "cart-item";
 
+
       div.innerHTML = `
-        <div class="cart-item-details">
-          <h4>${item.product?.name || "Unnamed Product"}</h4>
-          <p>Quantity: ${item.quantity}</p>
-        </div>
-        <div class="cart-item-price">${formatPrice(item.price * item.quantity)}</div>
-        <button class="btn-danger" data-remove-id="${item.productId}">Remove</button>
-      `;
+         <div class="cart-item-details">
+         <h4>${item.productId.name || "Unnamed Product"}</h4>
+         <p>Quantity: ${item.quantity}</p>
+         </div>
+         <div class="cart-item-price">${formatPrice(item.price * item.quantity)}</div>
+         <button class="btn-danger" data-remove-id="${item.productId}">Remove</button>
+   `;
 
       container.appendChild(div);
       total += item.price * item.quantity;
@@ -453,8 +454,7 @@ async function clearServerCart() {
   } catch (_) { }
 }
 
-// Load cart on page load
-document.addEventListener("DOMContentLoaded", loadCart);
+
 
 // Helper: add item to guest cart
 function addToGuestCart(productId, productName, price, quantity = 1) {
